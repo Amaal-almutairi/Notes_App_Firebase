@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,10 +35,17 @@ class MainActivity : AppCompatActivity() {
         btnsub.setOnClickListener {
             // her we will add note
             var note=addNote.text.toString()
-            // we call Insertnote function to add the note to database
-            mymodle.Insertnote(Notes("",note))
-            addNote.text.clear()
-            addNote.clearFocus()
+            if (addNote.text.toString().isNotEmpty()){
+                addNote.text.clear()
+                addNote.clearFocus()
+                // we call Insertnote function to add the note to database
+                mymodle.Insertnote(Notes("",note))
+            }else{
+                Toast.makeText(this, "Please Enter A value", Toast.LENGTH_SHORT).show()
+            }
+
+
+
         }
         // her we call this function her " MyViewModel class" so we can display the data inside recyclerview
         mymodle.getNote()
@@ -61,7 +69,12 @@ class MainActivity : AppCompatActivity() {
         val id = oldnote.id
         newNote.hint="Enter new text"
         dialog.setCancelable(false).setPositiveButton("Save", DialogInterface.OnClickListener {
-                _, i -> mymodle.updatenote(id,newNote.text.toString())})
+                _, i -> if (newNote.text.isNotEmpty()) {
+            mymodle.updatenote(id, newNote.text.toString())
+        }else{
+            Toast.makeText(this, "Please Enter A value ", Toast.LENGTH_SHORT).show()
+        }
+            })
 
         dialog.setNegativeButton("Cancel", DialogInterface.OnClickListener { _, i ->  })
         // the alert will create if we press the edit icon the function edit will cal the updatNote function
